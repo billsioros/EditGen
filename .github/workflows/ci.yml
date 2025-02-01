@@ -1,0 +1,49 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - staging
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - staging
+    paths:
+      - "src/"
+      - "tests/**/*.py"
+      - "pyproject.toml"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.11
+      - name: Install uv
+        uses: yezz123/setup-uv@v4
+        with:
+          uv-version: "0.4.10"
+      - name: Set up cache
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ hashFiles('**/requirements-dev.lock') }}
+      - name: Install dependencies
+        run: |
+          uv pip install --no-cache --system -r requirements-dev.lock
+      - name: Run the test suite
+        run: pytest --cov=src --cov-report=term-missing --cov-report=xml:./coverage.xml
+      - name: Get Coverage Report
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: orgoro/coverage@v3.2
+        with:
+          coverageFile: ./coverage.xml
+          token: ${{ secrets.GITHUB_TOKEN }}

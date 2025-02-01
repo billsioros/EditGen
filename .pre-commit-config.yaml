@@ -1,0 +1,92 @@
+ci:
+  exclude: '^fixtures/.*'
+  skip: [hadolint-docker]
+  autofix_commit_msg: 'refactor: `pre-commit.ci` auto fix'
+  autofix_prs: true
+  autoupdate_commit_msg: 'ci: `pre-commit.ci` auto update'
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.5
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+        exclude: ^docs|tests
+      - id: ruff-format
+        types_or: [python, pyi]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.3.0
+    hooks:
+      - id: codespell
+        files: \.(py|md)$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: \.(yml|yaml)$
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: debug-statements
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v3.29.0
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]
+        args: [--ignore=B6, --msg-filename]
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 3.0.3
+    hooks:
+      - id: editorconfig-checker
+  - repo: https://github.com/jendrikseipp/vulture
+    rev: v2.11
+    hooks:
+      - id: vulture
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.13.0-beta
+    hooks:
+      - id: hadolint-docker
+        args: ['--ignore', 'DL3006']
+  - repo: https://github.com/PyCQA/docformatter
+    rev: v1.7.5
+    hooks:
+      - id: docformatter
+        additional_dependencies: [tomli]
+        exclude: tests
+        args: [--config, pyproject.toml]
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit
+        additional_dependencies: ["bandit[toml]"]
+        args: ["-c", "pyproject.toml"]
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: 2.2.3
+    hooks:
+      - id: pyproject-fmt
+        args: [--indent, '2']
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.13.0
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
