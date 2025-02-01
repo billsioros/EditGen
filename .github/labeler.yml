@@ -1,0 +1,22 @@
+# Add 'Documentation' label to any changes within 'docs' folder or any subfolders
+':memo: documentation':
+  - changed-files:
+      - any-glob-to-any-file:
+          - docs/**
+          - '**/*.md'
+# Add 'feature' label to any PR where the head branch name starts with `feature` or has a `feature` section in the name
+':bulb: feature request':
+  - head-branch: ['^feat', 'feat']
+# Add 'bug' label to any PR where the head branch name starts with `fix` or has a `fix` section in the name
+':bug: bug':
+  - head-branch: ['^fix', 'fix']
+# Add 'dependencies' label to any PR where the head branch name starts with `chore(deps)` or has a `chore(deps)` section in the name
+':game_die: dependencies':
+  - head-branch: ['^chore\(deps\)', 'chore\(deps\)']
+  - changed-files:
+      - any-glob-to-any-file:
+          - requirements.lock
+          - requirements-dev.lock
+# Add 'release' label to any PR that is opened against the `main` branch
+':rocket: release':
+  - base-branch: 'main'

@@ -1,0 +1,43 @@
+name: Continuous Integration
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+    branches:
+      - master
+    paths:
+      - "src/"
+      - "tests/**/*.py"
+      - "pyproject.toml"
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install uv
+        uses: yezz123/setup-uv@v4
+        with:
+          uv-version: "0.4.10"
+      - name: Set up cache
+        uses: actions/cache@v4
+        with:
+          path: .venv
+          key: venv-${{ hashFiles('**/requirements-dev.lock') }}
+      - name: Install dependencies
+        run: |
+          uv pip install --no-cache --system -r requirements-dev.lock
+      - name: Run the test suite
+        run: pytest

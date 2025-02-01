@@ -1,0 +1,71 @@
+ci:
+  autofix_commit_msg: 'refactor: `pre-commit.ci` auto fix'
+  autofix_prs: true
+  autoupdate_commit_msg: 'ci: `pre-commit.ci` auto update'
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.4
+    hooks:
+      - id: ruff
+        args: [--fix, --exit-non-zero-on-fix]
+      - id: ruff-format
+        types_or: [python, pyi]
+  - repo: https://github.com/codespell-project/codespell
+    rev: v2.4.1
+    hooks:
+      - id: codespell
+        files: \.(py|md)$
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-docstring-first
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: fix-byte-order-marker
+      - id: mixed-line-ending
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: \.(yml|yaml)$
+      - id: check-yaml
+      - id: check-json
+      - id: check-toml
+      - id: debug-statements
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.1.1
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
+  - repo: https://github.com/jorisroovers/gitlint
+    rev: v0.19.1
+    hooks:
+      - id: gitlint
+        stages: [commit-msg]
+        args: [--ignore=B6, --msg-filename]
+  - repo: https://github.com/editorconfig-checker/editorconfig-checker.python
+    rev: 3.2.0
+    hooks:
+      - id: editorconfig-checker
+  - repo: https://github.com/tox-dev/pyproject-fmt
+    rev: v2.5.0
+    hooks:
+      - id: pyproject-fmt
+        args: [--indent, '2']
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.15.0
+    hooks:
+      - id: yamlfmt
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
+  - repo: https://github.com/nbQA-dev/nbQA
+    rev: 1.9.1
+    hooks:
+      - id: nbqa-ruff
+  - repo: meta
+    hooks:
+      - id: check-hooks-apply
+      - id: check-useless-excludes
